@@ -41,7 +41,40 @@ npm start
 
 ## 🔧 Configuration
 
-### Option 1: Using Portable Script (Recommended for Claude Code)
+Choose your IDE/Editor (Updated for 2025):
+
+<details>
+<summary><strong>▶ Claude Desktop</strong></summary>
+
+**Method 1: Using the UI (Recommended)**
+1. Open Claude Desktop
+2. Click on **Claude** menu → **Settings** 
+3. Click on **Developer** in the left sidebar
+4. Click **Edit Config**
+5. Add the following configuration:
+
+```json
+{
+  "mcpServers": {
+    "mantis-mcp": {
+      "command": "node",
+      "args": ["/absolute/path/to/mantis-mcp/dist/index.js"]
+    }
+  }
+}
+```
+
+**Method 2: Direct file edit**
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+Restart Claude Desktop after adding the configuration.
+</details>
+
+<details>
+<summary><strong>▶ Claude Code</strong></summary>
+
+Using the CLI with portable script:
 
 ```bash
 # Make the portable script executable
@@ -51,20 +84,144 @@ chmod +x mantis-mcp-portable.sh
 claude mcp add mantis-mcp "$(pwd)/mantis-mcp-portable.sh"
 ```
 
-### Option 2: Direct Node Configuration
+Or using direct node command:
+```bash
+claude mcp add mantis-mcp node $(pwd)/dist/index.js
+```
+</details>
 
-Add to your Claude Desktop configuration:
+<details>
+<summary><strong>▶ Cursor</strong></summary>
+
+**Latest Cursor (2025)** configuration:
+
+**Method 1: Using UI**
+1. Open Cursor
+2. Go to **Settings** → **Cursor Settings**
+3. Find **MCP Servers** option and enable it
+4. Click **Add new MCP server**
+5. Configure the server (a green dot will appear when active)
+
+**Method 2: Configuration file**
+Create or edit `~/.cursor/mcp.json` (global) or `.cursor/mcp.json` (project-specific):
 
 ```json
 {
   "mcpServers": {
     "mantis-mcp": {
       "command": "node",
-      "args": ["/path/to/mantis-mcp/dist/index.js"]
+      "args": ["/absolute/path/to/mantis-mcp/dist/index.js"]
     }
   }
 }
 ```
+
+Restart Cursor after configuration.
+</details>
+
+<details>
+<summary><strong>▶ Windsurf (formerly Codeium)</strong></summary>
+
+**Windsurf Wave 3 (2025)** with MCP support:
+
+**Method 1: Using Cascade UI**
+1. Open Windsurf Editor
+2. Click the **Hammer Icon** on the Cascade toolbar
+3. Configure MCP servers through the UI
+4. One-click setup for curated MCP servers available
+
+**Method 2: Configuration file**
+Edit `~/.codeium/windsurf/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "mantis-mcp": {
+      "command": "node",
+      "args": ["/absolute/path/to/mantis-mcp/dist/index.js"]
+    }
+  }
+}
+```
+
+**Note**: Maximum 50 tools can be active at once from MCP servers.
+</details>
+
+<details>
+<summary><strong>▶ VS Code (via Continue.dev or Cline)</strong></summary>
+
+**Option 1: Using Continue.dev Extension**
+
+Install Continue.dev extension, then edit `~/.continue/config.json`:
+
+```json
+{
+  "models": [{
+    "title": "Claude with MCP",
+    "model": "claude-3-opus",
+    "provider": "anthropic",
+    "mcpServers": {
+      "mantis-mcp": {
+        "command": "node",
+        "args": ["/absolute/path/to/mantis-mcp/dist/index.js"]
+      }
+    }
+  }]
+}
+```
+
+**Option 2: Using Cline Extension (formerly Claude Dev)**
+
+1. Install Cline extension in VS Code
+2. Open Cline settings in VS Code
+3. Go to MCP Servers section
+4. Add Mantis MCP configuration
+</details>
+
+<details>
+<summary><strong>▶ Zed</strong></summary>
+
+For Zed editor with MCP support:
+
+1. Open Zed settings: `~/.config/zed/settings.json`
+2. Add MCP configuration:
+
+```json
+{
+  "assistant": {
+    "mcpServers": {
+      "mantis-mcp": {
+        "command": "node",
+        "args": ["/absolute/path/to/mantis-mcp/dist/index.js"]
+      }
+    }
+  }
+}
+```
+
+Restart Zed after configuration.
+</details>
+
+<details>
+<summary><strong>▶ Other MCP-Compatible Editors</strong></summary>
+
+For any MCP-compatible editor, the general configuration format is:
+
+```json
+{
+  "mcpServers": {
+    "mantis-mcp": {
+      "command": "node",
+      "args": ["/absolute/path/to/mantis-mcp/dist/index.js"]
+    }
+  }
+}
+```
+
+Check your editor's documentation for the specific configuration file location.
+</details>
+
+**Note**: After adding the configuration, restart your IDE/editor for the MCP server to be recognized.
 
 ## 🛠️ Available Tools
 
