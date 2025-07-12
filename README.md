@@ -41,7 +41,7 @@ npm start
 
 ## 🔧 Configuration
 
-Choose your IDE/Editor (Updated for 2025):
+Choose your IDE/Editor:
 
 <details>
 <summary><strong>▶ Claude Desktop</strong></summary>
