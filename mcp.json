@@ -1,0 +1,56 @@
+{
+  "name": "@mantis-3d/mcp-server",
+  "description": "MCP server for Mantis XR SDK integration and debugging",
+  "version": "1.0.0",
+  "server": {
+    "command": "node",
+    "args": ["dist/index.js"],
+    "env": {}
+  },
+  "tools": [
+    {
+      "name": "installMantisSDK",
+      "description": "Install and configure Mantis SDK with proper .npmrc setup"
+    },
+    {
+      "name": "validateSetup",
+      "description": "Validate Mantis SDK installation and configuration"
+    },
+    {
+      "name": "createMantisIntegration",
+      "description": "Generate Mantis integration code for your framework"
+    },
+    {
+      "name": "generateEventHandler",
+      "description": "Generate event handler code for Mantis SDK events"
+    },
+    {
+      "name": "debugPostMessage",
+      "description": "Debug postMessage communication issues"
+    },
+    {
+      "name": "analyzeConsoleErrors",
+      "description": "Analyze console errors and suggest fixes"
+    },
+    {
+      "name": "checkBrowserCompatibility",
+      "description": "Check browser compatibility issues"
+    },
+    {
+      "name": "testMantisEvent",
+      "description": "Test Mantis SDK events and responses"
+    },
+    {
+      "name": "simulateUserFlow",
+      "description": "Simulate user interactions with Mantis experience"
+    },
+    {
+      "name": "getPerformanceMetrics",
+      "description": "Get performance metrics for 3D experience"
+    },
+    {
+      "name": "analyzeEventFlow",
+      "description": "Analyze event flow and user behavior"
+    }
+  ]
+}
