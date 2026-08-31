@@ -223,6 +223,36 @@ Check your editor's documentation for the specific configuration file location.
 
 **Note**: After adding the configuration, restart your IDE/editor for the MCP server to be recognized.
 
+## 🔌 API Integration (Optional)
+
+Connect to your Mantis backend for real-time validation and data:
+
+```bash
+# Copy example environment file
+cp .env.example .env
+
+# Edit .env with your API settings
+MANTIS_API_URL=https://your-api.mantisxr.com
+MANTIS_AUTH_TOKEN=your-auth-token
+```
+
+**Environment Variables:**
+- `MANTIS_API_URL` - Your Mantis API base URL (AWS, Vercel, etc.)
+- `MANTIS_AUTH_TOKEN` - Bearer token for authenticated requests (optional)
+- `MANTIS_SHOWROOM_ID` - Default showroom ID for validation (optional)
+
+**What this enables:**
+- ✅ Real showroom validation via `validateSetup`
+- ✅ Live configuration checks
+- ✅ Actual API error responses
+
+**Without API config:**
+- Tools work with sample/mock data
+- Still useful for code generation and debugging
+- No external dependencies required
+
+The API client is cloud-agnostic and works with any REST backend (AWS Lambda, Vercel, Railway, custom servers).
+
 ## 🛠️ Available Tools
 
 ### Setup & Installation

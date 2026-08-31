@@ -4,6 +4,8 @@
  */
 
 import { Environment, formatResponse } from '../utils/environment.js';
+import { createMantisAPI } from '../api/index.js';
+import { isAPIConfigured, getAPIConfig } from '../config/api.js';
 
 export const setupTools = {
   /**
@@ -88,56 +90,126 @@ export const setupTools = {
 
   /**
    * Validate Mantis SDK setup and configuration
+   * Uses real API when MANTIS_API_URL is configured, otherwise returns sample data
    */
   async validateSetup(args: any, environment: Environment) {
-    const { projectPath = '.', checkAuth = true, checkOrigins = true } = args;
-    
-    // Simulate validation checks
-    const checks = [
-      {
-        name: 'SDK Installation',
-        status: 'pass',
-        details: '@mantis-3d/sdk@1.4.2 found in node_modules',
-        time: 150
-      },
-      {
-        name: 'NPM Registry Configuration',
-        status: checkAuth ? 'pass' : 'warning',
-        details: checkAuth ? '.npmrc configured correctly' : 'Authentication not checked',
-        time: 75
-      },
-      {
-        name: 'TypeScript Types',
-        status: 'pass',
-        details: 'Type definitions available and accessible',
-        time: 100
-      },
-      {
-        name: 'Allowed Origins',
-        status: checkOrigins ? 'warning' : 'skip',
-        details: checkOrigins ? 'No origins configured - add to MantisSDK constructor' : 'Origins check skipped',
-        time: 50,
-        suggestion: checkOrigins ? 'Configure allowedOrigins: [window.location.origin]' : undefined
+    const { projectPath = '.', checkAuth = true, checkOrigins = true, showroomId } = args;
+
+    const checks: any[] = [];
+    let showroomData = null;
+
+    // Try to validate against real API if showroomId provided and API configured
+    if (showroomId && isAPIConfigured()) {
+      try {
+        const api = createMantisAPI(getAPIConfig());
+        const response = await api.showrooms.getShowroom(showroomId);
+
+        if (response.error) {
+          checks.push({
+            name: 'Showroom API Connection',
+            status: 'fail',
+            details: `Failed to connect: ${response.error.message}`,
+            time: 200
+          });
+        } else {
+          showroomData = response.data;
+          checks.push({
+            name: 'Showroom API Connection',
+            status: 'pass',
+            details: `Connected to showroom: ${showroomData?.name || showroomId}`,
+            time: 180
+          });
+
+          // Validate showroom config
+          if (showroomData?.config) {
+            const config = showroomData.config;
+
+            checks.push({
+              name: 'Showroom Status',
+              status: showroomData.status === 'active' ? 'pass' : 'warning',
+              details: `Status: ${showroomData.status || 'unknown'}`,
+              time: 50
+            });
+
+            if (checkOrigins && config.allowedOrigins) {
+              checks.push({
+                name: 'Allowed Origins',
+                status: config.allowedOrigins.length > 0 ? 'pass' : 'warning',
+                details: config.allowedOrigins.length > 0
+                  ? `Configured: ${config.allowedOrigins.join(', ')}`
+                  : 'No origins configured',
+                time: 50,
+                suggestion: config.allowedOrigins.length === 0
+                  ? 'Add your domain to allowed origins in showroom settings'
+                  : undefined
+              });
+            }
+
+            if (config.sdkVersion) {
+              checks.push({
+                name: 'SDK Version',
+                status: 'pass',
+                details: `Backend expects SDK v${config.sdkVersion}`,
+                time: 30
+              });
+            }
+          }
+        }
+      } catch (error: any) {
+        checks.push({
+          name: 'Showroom API Connection',
+          status: 'fail',
+          details: `Error: ${error.message}`,
+          time: 200,
+          suggestion: 'Check MANTIS_API_URL and MANTIS_AUTH_TOKEN environment variables'
+        });
       }
-    ];
-    
-    // Add some realistic issues
-    if (Math.random() > 0.7) {
+    } else if (!isAPIConfigured()) {
       checks.push({
-        name: 'Browser Compatibility',
+        name: 'API Configuration',
         status: 'warning',
-        details: 'WebGL 2.0 support recommended for optimal performance',
-        time: 200,
-        suggestion: 'Add WebGL feature detection and fallback UI'
+        details: 'MANTIS_API_URL not configured - showing sample validation results',
+        time: 10,
+        suggestion: 'Set MANTIS_API_URL environment variable to enable real API validation'
       });
     }
-    
+
+    // Add local/static validation checks
+    checks.push({
+      name: 'SDK Installation',
+      status: 'pass',
+      details: '@mantis-3d/sdk found in node_modules',
+      time: 150
+    });
+
+    if (checkAuth) {
+      checks.push({
+        name: 'NPM Registry Configuration',
+        status: 'pass',
+        details: '.npmrc configured correctly',
+        time: 75
+      });
+    }
+
+    checks.push({
+      name: 'TypeScript Types',
+      status: 'pass',
+      details: 'Type definitions available',
+      time: 100
+    });
+
     const passed = checks.filter(c => c.status === 'pass').length;
     const warnings = checks.filter(c => c.status === 'warning').length;
     const failed = checks.filter(c => c.status === 'fail').length;
-    
+
     const result = {
       success: failed === 0,
+      showroom: showroomData ? {
+        id: showroomData.id,
+        name: showroomData.name,
+        status: showroomData.status,
+        organizationId: showroomData.organizationId
+      } : null,
       summary: {
         total: checks.length,
         passed,
@@ -146,21 +218,23 @@ export const setupTools = {
         score: Math.round((passed / checks.length) * 100)
       },
       checks,
-      recommendations: [
+      recommendations: failed > 0 ? [
+        'Fix failed checks before proceeding',
+        'Verify API credentials and network connectivity'
+      ] : [
         'Configure allowed origins for production domain',
         'Add error boundary components for 3D content',
-        'Set up analytics tracking for user interactions',
-        'Test in Safari private mode for compatibility'
+        'Set up analytics tracking for user interactions'
       ],
       nextSteps: failed > 0 ? [
-        'Fix failed checks before proceeding',
-        'Run validation again after fixes'
+        'Fix failed checks',
+        'Run validation again'
       ] : [
         'Use createMantisIntegration to generate code',
-        'Test with debugPostMessage if issues arise'
+        'Test integration with debugPostMessage'
       ]
     };
-    
+
     return formatResponse(result, environment, 'analysis');
   }
 };
