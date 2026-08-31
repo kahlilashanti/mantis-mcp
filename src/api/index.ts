@@ -13,6 +13,10 @@
 
 import { MantisAPIClient } from './client.js';
 import { ShowroomsAPI } from './endpoints/showrooms.js';
+import { ProductsAPI } from './endpoints/products.js';
+import { OrganizationsAPI } from './endpoints/organizations.js';
+import { AnalyticsAPI } from './endpoints/analytics.js';
+import { AuthAPI } from './endpoints/auth.js';
 import type { APIConfig } from './types.js';
 
 export class MantisAPI {
@@ -20,14 +24,24 @@ export class MantisAPI {
 
   // Endpoint modules
   public showrooms: ShowroomsAPI;
+  public products: ProductsAPI;
+  public organizations: OrganizationsAPI;
+  public analytics: AnalyticsAPI;
+  public auth: AuthAPI;
 
   constructor(config: APIConfig) {
     this.client = new MantisAPIClient(config);
+
+    // Initialize all endpoint modules
     this.showrooms = new ShowroomsAPI(this.client);
+    this.products = new ProductsAPI(this.client);
+    this.organizations = new OrganizationsAPI(this.client);
+    this.analytics = new AnalyticsAPI(this.client);
+    this.auth = new AuthAPI(this.client);
   }
 
   /**
-   * Update auth token (e.g., after login)
+   * Update auth token (e.g., after login or guest account creation)
    */
   setAuthToken(token: string): void {
     this.client.setAuthToken(token);
@@ -51,3 +65,4 @@ export function createMantisAPI(config: APIConfig): MantisAPI {
 // Re-export types for convenience
 export * from './types.js';
 export { MantisAPIClient } from './client.js';
+export type { GuestAccountResponse } from './endpoints/auth.js';

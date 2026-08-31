@@ -22,28 +22,45 @@ import { getAPIConfig } from './config/api.js';
 // Create client
 const api = createMantisAPI(getAPIConfig());
 
-// Get showroom details
-const result = await api.showrooms.getShowroom('showroom_123');
+// Showrooms
+const showroom = await api.showrooms.getShowroom('showroom_123');
 
-if (result.error) {
-  console.error('API error:', result.error.message);
-} else {
-  console.log('Showroom:', result.data);
+// Products
+const product = await api.products.getProduct('product_456');
+
+// Organizations
+const org = await api.organizations.getOrganization('org_789');
+
+// Analytics (future endpoints)
+const metrics = await api.analytics.getMetrics('showroom_123');
+
+// Auth - Create guest account
+const guest = await api.auth.createGuestAccount('John Doe');
+if (!guest.error) {
+  api.setAuthToken(guest.data.token);
 }
 
-// Update auth token
-api.setAuthToken('new-token');
+// Error handling
+if (showroom.error) {
+  console.error('API error:', showroom.error.message);
+} else {
+  console.log('Showroom:', showroom.data);
+}
 ```
 
 ## Architecture
 
 ```
 src/api/
-├── client.ts           # HTTP client (fetch-based)
-├── types.ts            # TypeScript types
+├── client.ts              # HTTP client (fetch-based)
+├── types.ts               # TypeScript types
 ├── endpoints/
-│   └── showrooms.ts    # Showroom endpoints
-└── index.ts            # Main export
+│   ├── showrooms.ts       # Showroom endpoints
+│   ├── products.ts        # Product/catalog endpoints
+│   ├── organizations.ts   # Multi-tenant org endpoints
+│   ├── analytics.ts       # Performance & event tracking (future)
+│   └── auth.ts            # Guest accounts & authentication
+└── index.ts               # Main export
 ```
 
 ## Response Format

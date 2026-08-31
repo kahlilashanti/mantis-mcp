@@ -253,6 +253,17 @@ MANTIS_AUTH_TOKEN=your-auth-token
 
 The API client is cloud-agnostic and works with any REST backend (AWS Lambda, Vercel, Railway, custom servers).
 
+## 🏪 Store Creation & 3D Assets
+
+**New Tools for End-to-End Store Creation:**
+- `importCatalog` - Import products from Shopify or CSV/manual input
+- `createStore` - Create showroom with imported products
+- `publishStore` - Publish showroom (make it live)
+
+**3D Asset Generation (Scope Boundary):**
+
+Mantis does not provide automated 2D-to-3D asset conversion. Merchants must provide 3D-ready assets (.glb/.gltf files) when creating products. This is an intentional scope decision: automated 3D generation is a commoditizing service layer that multiple well-funded companies (VNTANA, Curio) attempted and failed to build sustainable businesses around. Our value is the showroom platform, merchandising intelligence, and agent-invokable commerce infrastructure, not asset generation. 3D asset creation is handled via Mantis's existing manual design service for premium customers or future partner integrations.
+
 ## 🛠️ Available Tools
 
 ### Setup & Installation
@@ -275,6 +286,11 @@ The API client is cloud-agnostic and works with any REST backend (AWS Lambda, Ve
 ### Monitoring
 - `getPerformanceMetrics` - Get performance metrics for 3D experience
 - `analyzeEventFlow` - Analyze event flow and user behavior
+
+### Store Creation
+- `importCatalog` - Import product catalog from Shopify, CSV, or manual input
+- `createStore` - Create showroom with imported products
+- `publishStore` - Publish showroom to make it live
 
 ## 📋 Usage Examples
 

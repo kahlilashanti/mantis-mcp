@@ -14,6 +14,7 @@ import { developmentTools } from './tools/development.js';
 import { debuggingTools } from './tools/debugging.js';
 import { testingTools } from './tools/testing.js';
 import { monitoringTools } from './tools/monitoring.js';
+import { storeCreationTools } from './tools/store-creation.js';
 
 // Environment detection utility
 import { detectEnvironment } from './utils/environment.js';
@@ -292,6 +293,92 @@ class MantisMCPServer {
                 }
               }
             }
+          },
+
+          // Store Creation Tools
+          {
+            name: 'importCatalog',
+            description: 'Import product catalog from Shopify, CSV, or manual input',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                source: {
+                  type: 'string',
+                  enum: ['shopify', 'csv', 'manual'],
+                  description: 'Import source: shopify, csv, or manual'
+                },
+                shopifyStore: {
+                  type: 'string',
+                  description: 'Shopify store domain (for Shopify import)'
+                },
+                shopifyAccessToken: {
+                  type: 'string',
+                  description: 'Shopify API access token (for Shopify import)'
+                },
+                csvData: {
+                  type: 'string',
+                  description: 'CSV data with columns: name,description,imageURL,price,sku (for CSV import)'
+                },
+                products: {
+                  type: 'array',
+                  description: 'Product array (for manual import)',
+                  items: { type: 'object' }
+                }
+              },
+              required: ['source']
+            }
+          },
+          {
+            name: 'createStore',
+            description: 'Create showroom with imported products',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                name: {
+                  type: 'string',
+                  description: 'Store/showroom name'
+                },
+                description: {
+                  type: 'string',
+                  description: 'Store description (optional)'
+                },
+                organizationId: {
+                  type: 'string',
+                  description: 'Organization ID (optional)'
+                },
+                products: {
+                  type: 'array',
+                  description: 'Products to add to store',
+                  items: { type: 'object' }
+                },
+                config: {
+                  type: 'object',
+                  description: 'Store configuration (optional)'
+                }
+              },
+              required: ['name']
+            }
+          },
+          {
+            name: 'publishStore',
+            description: 'Publish showroom to make it live',
+            inputSchema: {
+              type: 'object',
+              properties: {
+                showroomId: {
+                  type: 'string',
+                  description: 'Showroom ID to publish'
+                },
+                showroomAlias: {
+                  type: 'string',
+                  description: 'Showroom alias to publish'
+                },
+                domain: {
+                  type: 'string',
+                  description: 'Custom domain (optional)'
+                }
+              }
+            }
           }
         ]
       };
@@ -364,7 +451,18 @@ class MantisMCPServer {
           case 'analyzeEventFlow':
             result = await monitoringTools.analyzeEventFlow(args, environment);
             break;
-            
+
+          // Store creation tools
+          case 'importCatalog':
+            result = await storeCreationTools.importCatalog(args, environment);
+            break;
+          case 'createStore':
+            result = await storeCreationTools.createStore(args, environment);
+            break;
+          case 'publishStore':
+            result = await storeCreationTools.publishStore(args, environment);
+            break;
+
           default:
             throw new Error(`Unknown tool: ${name}`);
         }
