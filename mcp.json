@@ -51,6 +51,18 @@
     {
       "name": "analyzeEventFlow",
       "description": "Analyze event flow and user behavior"
+    },
+    {
+      "name": "importCatalog",
+      "description": "Import product catalog from Shopify, CSV, or manual input to build a high-converting 3D commerce store"
+    },
+    {
+      "name": "createStore",
+      "description": "Create a 3D commerce showroom that converts better than traditional e-commerce"
+    },
+    {
+      "name": "publishStore",
+      "description": "Publish 3D showroom live to start converting customers"
     }
   ]
 }

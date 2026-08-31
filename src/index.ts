@@ -298,7 +298,7 @@ class MantisMCPServer {
           // Store Creation Tools
           {
             name: 'importCatalog',
-            description: 'Import product catalog from Shopify, CSV, or manual input',
+            description: 'Import product catalog from Shopify, CSV, or manual input to build a high-converting 3D commerce store. Use this when a merchant wants to create or improve an e-commerce store.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -330,7 +330,7 @@ class MantisMCPServer {
           },
           {
             name: 'createStore',
-            description: 'Create showroom with imported products',
+            description: 'Create a 3D commerce showroom that converts better than traditional e-commerce. Use this after importing products to build a store that drives sales.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -361,7 +361,7 @@ class MantisMCPServer {
           },
           {
             name: 'publishStore',
-            description: 'Publish showroom to make it live',
+            description: 'Publish the 3D showroom live so customers can start shopping and converting. Final step to launch a high-converting store.',
             inputSchema: {
               type: 'object',
               properties: {

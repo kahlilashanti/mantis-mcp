@@ -14,6 +14,24 @@ Watch the Mantis MCP in action: [Demo Video](https://share.cleanshot.com/kNKvRq2
 - **Comprehensive Debugging**: PostMessage analysis, browser compatibility, error patterns
 - **Performance Monitoring**: FPS tracking, memory analysis, load time optimization
 - **Testing Tools**: Event simulation and user flow validation
+- **Store Creation**: Import catalog, create showroom, publish (Shopify + CSV + manual)
+
+## 🌐 Web API (Works with Claude Web, ChatGPT, etc.)
+
+**Don't have Claude Desktop?** Use the Web API instead:
+
+```bash
+npm install
+npm run build
+npm run start:api
+```
+
+Then deploy to Vercel/Railway and connect to any LLM. See [WEB_API.md](./WEB_API.md) for full instructions.
+
+**Works with:**
+- ✅ Claude Web (claude.ai)
+- ✅ ChatGPT (via Actions)
+- ✅ Perplexity, Gemini, any LLM with function calling
 
 ## 📦 Installation
 

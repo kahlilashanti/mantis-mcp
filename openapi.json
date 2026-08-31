@@ -1,0 +1,192 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Mantis Store Creation API",
+    "description": "Create and manage 3D commerce stores. Import products from Shopify or CSV, create showrooms, and publish stores.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://your-deployment-url.com/api",
+      "description": "Production"
+    },
+    {
+      "url": "http://localhost:3000/api",
+      "description": "Local development"
+    }
+  ],
+  "paths": {
+    "/import-catalog": {
+      "post": {
+        "operationId": "importCatalog",
+        "summary": "Import product catalog",
+        "description": "Import products from Shopify, CSV, or manual input",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["source"],
+                "properties": {
+                  "source": {
+                    "type": "string",
+                    "enum": ["shopify", "csv", "manual"],
+                    "description": "Import source"
+                  },
+                  "shopifyStore": {
+                    "type": "string",
+                    "description": "Shopify store domain (for Shopify import)"
+                  },
+                  "shopifyAccessToken": {
+                    "type": "string",
+                    "description": "Shopify API token (for Shopify import)"
+                  },
+                  "csvData": {
+                    "type": "string",
+                    "description": "CSV with columns: name,description,imageURL,price,sku"
+                  },
+                  "products": {
+                    "type": "array",
+                    "description": "Product array for manual input",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {"type": "string"},
+                        "description": {"type": "string"},
+                        "imageURL": {"type": "string"},
+                        "price": {"type": "number"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Products imported successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {"type": "boolean"},
+                    "imported": {"type": "number"},
+                    "products": {"type": "array"},
+                    "warnings": {"type": "array", "items": {"type": "string"}}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/create-store": {
+      "post": {
+        "operationId": "createStore",
+        "summary": "Create showroom store",
+        "description": "Create a new showroom with products",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Store name"
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "Store description"
+                  },
+                  "products": {
+                    "type": "array",
+                    "description": "Products to add",
+                    "items": {"type": "object"}
+                  },
+                  "organizationId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Store created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {"type": "boolean"},
+                    "showroomId": {"type": "string"},
+                    "showroomAlias": {"type": "string"},
+                    "showroomURL": {"type": "string"},
+                    "productsAdded": {"type": "number"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/publish-store": {
+      "post": {
+        "operationId": "publishStore",
+        "summary": "Publish showroom",
+        "description": "Make showroom live and accessible",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "showroomId": {
+                    "type": "string",
+                    "description": "Showroom ID"
+                  },
+                  "showroomAlias": {
+                    "type": "string",
+                    "description": "Showroom alias"
+                  },
+                  "domain": {
+                    "type": "string",
+                    "description": "Custom domain (optional)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Store published successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {"type": "boolean"},
+                    "published": {"type": "boolean"},
+                    "liveURL": {"type": "string"},
+                    "status": {"type": "string"}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
