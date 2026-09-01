@@ -3,7 +3,7 @@
  * Anne's flow: import catalog → create store → publish
  *
  * Backend Status: MOCKED where endpoints don't exist yet
- * Real API: Uses api-rds.mantisxr.com when available
+ * Real API: Uses configured MANTIS_API_URL when available
  */
 
 import { Environment, formatResponse } from '../utils/environment.js';
@@ -228,7 +228,7 @@ export const storeCreationTools = {
             showroomAlias: alias,
             productsAdded: products.length,
             status: 'draft',
-            showroomURL: `https://api-rds.mantisxr.com/showrooms/${alias}`,
+            showroomURL: `https://your-mantis-instance.com/showrooms/${alias}`,
             warnings: products.length === 0 ? ['No products added yet'] : [],
             nextSteps: [
               'Add 3D models to products',
@@ -255,7 +255,7 @@ export const storeCreationTools = {
       productsWith3D: products.length - productsWithout3D,
       productsWithout3D,
       status: 'draft',
-      showroomURL: `https://api-rds.mantisxr.com/showrooms/${alias}`,
+      showroomURL: `https://your-mantis-instance.com/showrooms/${alias}`,
       warnings: productsWithout3D > 0 ? [
         `${productsWithout3D} products missing 3D models`,
         '3D asset generation is not automated (see documentation)'
@@ -313,7 +313,7 @@ export const storeCreationTools = {
             mode: 'real',
             published: true,
             showroomAlias: alias,
-            liveURL: domain || `https://${alias}.mantisxr.com`,
+            liveURL: domain || `https://${alias}.your-domain.com`,
             status: 'active',
             nextSteps: [
               'Share the live URL with customers',
@@ -334,7 +334,7 @@ export const storeCreationTools = {
       notice: 'No publish endpoint exists - simulating status change to active',
       published: true,
       showroomAlias: alias,
-      liveURL: domain || `https://${alias}.mantisxr.com`,
+      liveURL: domain || `https://${alias}.your-domain.com`,
       status: 'active',
       deployment: {
         cdn: 'CloudFront (mocked)',

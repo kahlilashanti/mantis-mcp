@@ -31,7 +31,7 @@ class MantisMCPServer {
     this.server = new Server(
       {
         name: '@mantis-3d/mcp-server',
-        version: '1.0.0',
+        version: '1.0.1',
       },
       {
         capabilities: {

@@ -21,7 +21,7 @@ export function getAPIConfig(): APIConfig {
   if (!baseURL) {
     throw new Error(
       'MANTIS_API_URL environment variable is required. ' +
-      'Set it to your Mantis API base URL (e.g., https://api.mantisxr.com)'
+      'Set it to your Mantis API base URL (e.g., https://your-mantis-instance.com)'
     );
   }
 

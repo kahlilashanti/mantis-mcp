@@ -174,7 +174,7 @@ async function simulateFlowStep(step: string, index: number) {
     'load-experience': {
       baseTime: 800,
       successRate: 0.95,
-      data: { modelUrl: 'https://models.mantisxr.com/demo.glb', loadTime: 850 },
+      data: { modelUrl: 'https://models.example.com/demo.glb', loadTime: 850 },
       possibleErrors: ['Network timeout', 'Model not found'],
       warnings: ['Slow connection detected']
     },

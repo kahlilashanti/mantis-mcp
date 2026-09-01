@@ -1,7 +1,7 @@
 {
-  "name": "@mantis-3d/mcp-server",
-  "description": "MCP server for Mantis XR SDK integration and debugging",
-  "version": "1.0.0",
+  "name": "mantis-mcp",
+  "description": "Build proven high converting product showrooms and websites from your existing ecommerce catalog",
+  "version": "1.0.1",
   "server": {
     "command": "node",
     "args": ["dist/index.js"],

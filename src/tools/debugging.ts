@@ -22,7 +22,7 @@ export const debuggingTools = {
       },
       {
         timestamp: Date.now() - 4500,
-        origin: 'https://app.mantisxr.com',
+        origin: 'https://app.example.com',
         data: { type: 'ack', status: 'initialized' },
         direction: 'inbound'
       },

@@ -85,7 +85,7 @@ class MCPDemo {
           description: 'Analyze reported console errors',
           params: {
             errors: [
-              'Failed to execute \\'postMessage\\' on \\'Window\\': The target origin provided (\\'https://app.mantisxr.com\\') does not match the recipient window\\'s origin (\\'https://my-store.com\\').',
+              'Failed to execute \\'postMessage\\' on \\'Window\\': The target origin provided (\\'https://app.example.com\\') does not match the recipient window\\'s origin (\\'https://my-store.com\\').',
               'MantisSDK: Origin mismatch detected'
             ],
             browserInfo: {
@@ -102,7 +102,7 @@ class MCPDemo {
           params: {
             url: 'https://my-store.com/products/air-jordan-1',
             captureTime: 45,
-            filterOrigin: 'mantisxr.com'
+            filterOrigin: 'example.com'
           }
         },
         {

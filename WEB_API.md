@@ -101,7 +101,7 @@ railway up
 
 Optional (for real API integration):
 ```bash
-MANTIS_API_URL=https://api-rds.mantisxr.com
+MANTIS_API_URL=https://your-mantis-instance.com
 MANTIS_AUTH_TOKEN=your-token
 PORT=3000
 ```

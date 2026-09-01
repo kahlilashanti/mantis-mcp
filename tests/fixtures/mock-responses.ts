@@ -48,7 +48,7 @@ export const mockResponses = {
           {
             step: 1,
             description: 'Add Mantis SDK script to theme.liquid',
-            code: '<script src="https://cdn.mantisxr.com/sdk/v1.2.3/mantis-sdk.min.js"></script>',
+            code: '<script src="https://cdn.example.com/sdk/v1.2.3/mantis-sdk.min.js"></script>',
             location: 'Before closing </head> tag'
           },
           {
@@ -385,7 +385,7 @@ if (isPrivateMode) {
 import { MantisSDK } from '@mantis-3d/sdk';
 
 // Or for vanilla JS
-<script src="https://cdn.mantisxr.com/sdk/mantis-sdk.min.js"></script>`,
+<script src="https://cdn.example.com/sdk/mantis-sdk.min.js"></script>`,
         fixes: [
           'Add import statement',
           'Check bundle configuration',
