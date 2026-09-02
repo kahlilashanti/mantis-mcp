@@ -33,6 +33,14 @@ export interface APIError {
 // Showroom Types (Primary "Store" concept)
 // ============================================================================
 
+/**
+ * Shopify integration data
+ * Backend JWT-encodes this before storage
+ */
+export interface ShopifyData {
+  storeDomain: string;        // e.g., "odd-society.myshopify.com"
+}
+
 export interface Showroom {
   id: string;
   organizationId?: string;
@@ -40,6 +48,7 @@ export interface Showroom {
   description?: string;
   status?: 'active' | 'inactive' | 'draft';
   config?: ShowroomConfig;
+  shopify_data?: string;      // JWT token (returned from API as shopify_data)
   createdAt?: string;
   updatedAt?: string;
 }
@@ -67,6 +76,7 @@ export interface Product {
   description?: string;
   modelURL?: string;          // 3D model URL
   textureURL?: string;
+  shopifyProductId?: string;  // Shopify product ID for per-product checkout linking
   metadata?: Record<string, any>;
   createdAt?: string;
   updatedAt?: string;

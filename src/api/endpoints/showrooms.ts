@@ -4,7 +4,7 @@
  */
 
 import type { MantisAPIClient } from '../client.js';
-import type { APIResponse, Showroom, ShowroomDetail } from '../types.js';
+import type { APIResponse, Showroom, ShowroomDetail, ShopifyData } from '../types.js';
 
 export class ShowroomsAPI {
   constructor(private client: MantisAPIClient) {}
@@ -26,11 +26,13 @@ export class ShowroomsAPI {
 
   /**
    * Create new showroom
+   * shopifyData will be JWT-encoded by the backend before storage
    */
   async createShowroom(data: {
     name: string;
     description?: string;
     organizationId?: string;
+    shopifyData?: ShopifyData;
   }): Promise<APIResponse<Showroom>> {
     return this.client.post<Showroom>('/showrooms', data);
   }

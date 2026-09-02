@@ -184,8 +184,7 @@ export const storeCreationTools = {
   /**
    * Create showroom with imported products
    *
-   * Backend Status: MOCKED - Real endpoints don't fully exist yet
-   * Uses patterns from backend code (showrooms/{alias}, add-model, etc.)
+   * Backend Status: Real API - creates showroom with optional Shopify integration
    */
   async createStore(args: any, environment: Environment) {
     const {
@@ -193,6 +192,7 @@ export const storeCreationTools = {
       description,
       organizationId,
       products = [],
+      shopifyStore,  // Optional: Shopify store domain for automatic checkout integration
       config = {}
     } = args;
 
@@ -207,20 +207,35 @@ export const storeCreationTools = {
     const alias = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const showroomId = `showroom_${Date.now()}`;
 
+    // Build Shopify integration data if provided
+    const shopifyData = shopifyStore ? { storeDomain: shopifyStore } : undefined;
+
     // Try real API if configured
     if (isAPIConfigured()) {
       try {
         const api = createMantisAPI(getAPIConfig());
 
-        // Attempt real showroom creation
+        // Create showroom with Shopify integration if provided
         const showroomResponse = await api.showrooms.createShowroom({
           name,
           description,
-          organizationId
+          organizationId,
+          shopifyData
         });
 
         if (!showroomResponse.error && showroomResponse.data) {
           // Real API worked
+          const warnings = [];
+          if (products.length === 0) {
+            warnings.push('No products added yet');
+          }
+          if (!shopifyData) {
+            warnings.push(
+              'No checkout provider configured. Shopify auto-connects if shopifyStore is provided. ' +
+              'For other platforms, configure checkout manually or use agent assistance to set up the integration.'
+            );
+          }
+
           return formatResponse({
             success: true,
             mode: 'real',
@@ -228,11 +243,13 @@ export const storeCreationTools = {
             showroomAlias: alias,
             productsAdded: products.length,
             status: 'draft',
+            checkoutProvider: shopifyData ? 'shopify' : 'none',
+            shopifyStore: shopifyStore || null,
             showroomURL: `https://your-mantis-instance.com/showrooms/${alias}`,
-            warnings: products.length === 0 ? ['No products added yet'] : [],
+            warnings,
             nextSteps: [
               'Add 3D models to products',
-              'Configure showroom settings',
+              shopifyData ? 'Shopify checkout is configured - products will link to your Shopify store' : 'Configure checkout provider for sellable store',
               'Use publishStore to make it live'
             ]
           }, environment, 'execute');
@@ -242,37 +259,44 @@ export const storeCreationTools = {
       }
     }
 
-    // Mock response (backend endpoints don't exist yet)
+    // Mock response (API not configured)
     const productsWithout3D = products.filter((p: any) => !p.modelURL).length;
+    const warnings = [];
+
+    if (productsWithout3D > 0) {
+      warnings.push(
+        `${productsWithout3D} products missing 3D models`,
+        '3D asset generation is not automated (see documentation)'
+      );
+    }
+
+    if (!shopifyData) {
+      warnings.push(
+        'No checkout provider configured. Shopify auto-connects if shopifyStore is provided. ' +
+        'For other platforms, configure checkout manually or use agent assistance to set up the integration.'
+      );
+    }
 
     const result = {
       success: true,
       mode: 'mocked',
-      notice: 'Backend creation endpoints not fully implemented - returning mock data',
+      notice: 'API not configured - returning mock data. Configure MANTIS_API_URL to use real backend.',
       showroomId,
       showroomAlias: alias,
       productsAdded: products.length,
       productsWith3D: products.length - productsWithout3D,
       productsWithout3D,
       status: 'draft',
+      checkoutProvider: shopifyData ? 'shopify' : 'none',
+      shopifyStore: shopifyStore || null,
       showroomURL: `https://your-mantis-instance.com/showrooms/${alias}`,
-      warnings: productsWithout3D > 0 ? [
-        `${productsWithout3D} products missing 3D models`,
-        '3D asset generation is not automated (see documentation)'
-      ] : [],
+      warnings,
       nextSteps: [
-        'Backend needs: POST /showrooms, POST /products endpoints',
-        'For now: Add products manually via CMS',
+        'Configure MANTIS_API_URL environment variable',
+        'Add 3D models to products',
+        shopifyData ? 'Shopify checkout is configured - products will link to your Shopify store' : 'Configure checkout provider for sellable store',
         'Use publishStore when ready to go live'
-      ],
-      backendNeeded: {
-        endpoints: [
-          'POST /showrooms - Create showroom',
-          'POST /products - Create product',
-          'POST /showrooms/{alias}/add-model - Link 3D model to showroom'
-        ],
-        reference: 'See mantis-be-api/src/lambdas/showrooms/batch-update-models/index.mjs for patterns'
-      }
+      ]
     };
 
     return formatResponse(result, environment, 'analysis');

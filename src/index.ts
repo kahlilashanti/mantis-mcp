@@ -330,7 +330,7 @@ class MantisMCPServer {
           },
           {
             name: 'createStore',
-            description: 'Create a 3D commerce showroom that converts better than traditional e-commerce. Use this after importing products to build a store that drives sales.',
+            description: 'Create a 3D commerce showroom that converts better than traditional e-commerce. Use this after importing products to build a store that drives sales. Shopify checkout integrates automatically when shopifyStore is provided. For other e-commerce platforms, the agent can help configure checkout connections.',
             inputSchema: {
               type: 'object',
               properties: {
@@ -345,6 +345,10 @@ class MantisMCPServer {
                 organizationId: {
                   type: 'string',
                   description: 'Organization ID (optional)'
+                },
+                shopifyStore: {
+                  type: 'string',
+                  description: 'Shopify store domain for automatic checkout integration (e.g., "your-store.myshopify.com"). When provided, products in the 3D showroom will link directly to your Shopify store for checkout.'
                 },
                 products: {
                   type: 'array',
